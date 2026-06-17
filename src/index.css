@@ -1,0 +1,328 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+body {
+  zoom: 75%;
+  background-color: #ffffff;
+}
+@layer base {
+  :root {
+    --font-sans: 'DM Sans', system-ui, sans-serif;
+
+    /* ─────────────────────────────────────────────────────
+     * Rush Plate — Pleasant Green Palette
+     *
+     * Sourced from logo, refined for comfort & contrast:
+     *   Forest Dark  #1a3d1a  →  hsl(120, 39%, 17%)   headers / sidebar
+     *   Forest Mid   #2e6b2e  →  hsl(120, 41%, 30%)   primary actions
+     *   Sage Green   #4e9a4e  →  hsl(120, 33%, 45%)   accents / icons
+     *   Lime Bright  #7dc832  →  hsl( 92, 60%, 49%)   highlights / badges
+     *   Warm Cream   #f4f7ee  →  hsl( 84, 37%, 95%)   page background
+     *   Soft White   #ffffff
+     * ───────────────────────────────────────────────────── */
+
+    --background: 84 37% 95%;          /* warm cream — easy on the eyes */
+    --foreground: 120 35% 13%;         /* deep forest, readable */
+
+    --card: 0 0% 100%;
+    --card-foreground: 120 35% 13%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 120 35% 13%;
+
+    --primary: 120 41% 30%;            /* forest mid — confident & calm */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 84 28% 91%;           /* soft sage tint */
+    --secondary-foreground: 120 35% 20%;
+
+    --muted: 84 18% 90%;
+    --muted-foreground: 120 12% 46%;
+
+    --accent: 84 40% 88%;              /* lime-tinted cream */
+    --accent-foreground: 120 41% 26%;
+
+    --destructive: 4 74% 54%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 120 38% 36%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 93% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --info: 200 72% 46%;
+    --info-foreground: 0 0% 100%;
+
+    --border: 100 16% 84%;
+    --input: 100 16% 84%;
+    --ring: 120 41% 30%;
+
+    --radius: 0.75rem;
+
+    /* Sidebar — deep forest green, warm & grounded */
+    /* --sidebar-background: 120 39% 14%; */
+    /* --sidebar-foreground: 84 22% 82%; */
+    --sidebar-primary: 92 52% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 120 30% 22%;
+    --sidebar-accent-foreground: 84 22% 94%;
+    --sidebar-border: 120 28% 22%;
+    --sidebar-ring: 92 52% 50%;
+    --sidebar-muted: 120 20% 32%;
+
+    /* Brand tokens */
+    --brand-dark: 120 39% 14%;         /* forest dark */
+    --brand-light: 84 37% 95%;         /* warm cream */
+    --brand-green: 120 41% 30%;        /* forest mid */
+    --brand-lime: 92 60% 49%;          /* lime bright */
+
+    /* Gradients — calm, natural progressions */
+    --gradient-primary: linear-gradient(135deg, hsl(120, 41%, 30%), hsl(120, 39%, 17%));
+    --gradient-success: linear-gradient(135deg, hsl(120, 38%, 36%), hsl(140, 40%, 42%));
+    --gradient-warning: linear-gradient(135deg, hsl(38, 93%, 50%), hsl(28, 88%, 55%));
+    --gradient-info: linear-gradient(135deg, hsl(200, 72%, 46%), hsl(210, 68%, 54%));
+    --gradient-danger: linear-gradient(135deg, hsl(4, 74%, 54%), hsl(345, 68%, 52%));
+    --gradient-brand: linear-gradient(135deg, hsl(120, 41%, 30%), hsl(92, 55%, 44%));
+
+    --shadow-sm: 0 1px 2px 0 hsl(120 35% 13% / 0.04);
+    --shadow-md: 0 4px 6px -1px hsl(120 35% 13% / 0.06), 0 2px 4px -2px hsl(120 35% 13% / 0.04);
+    --shadow-lg: 0 10px 15px -3px hsl(120 35% 13% / 0.07), 0 4px 6px -4px hsl(120 35% 13% / 0.04);
+    --shadow-xl: 0 20px 25px -5px hsl(120 35% 13% / 0.09), 0 8px 10px -6px hsl(120 35% 13% / 0.04);
+    --shadow-glass: 0 8px 32px 0 hsl(120 41% 30% / 0.07);
+  }
+
+  .dark {
+    --background: 120 30% 7%;
+    --foreground: 84 22% 96%;
+    --card: 120 28% 10%;
+    --card-foreground: 84 22% 96%;
+    --popover: 120 28% 10%;
+    --popover-foreground: 84 22% 96%;
+    --primary: 92 52% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 120 22% 18%;
+    --secondary-foreground: 84 22% 96%;
+    --muted: 120 22% 18%;
+    --muted-foreground: 84 14% 62%;
+    --accent: 120 22% 18%;
+    --accent-foreground: 84 22% 96%;
+    --destructive: 4 60% 36%;
+    --destructive-foreground: 84 22% 96%;
+    --border: 120 22% 18%;
+    --input: 120 22% 18%;
+    --ring: 92 52% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: var(--font-sans);
+    font-size: clamp(14px, 1vw + 10px, 18px);
+    line-height: 1.6;
+  }
+
+  /* Retina / High-DPI */
+  @media (-webkit-min-device-pixel-ratio: 1.25) and (min-width: 1200px),
+         (min-resolution: 120dpi) and (min-width: 1200px) {
+    html { zoom: 1.15; }
+  }
+
+  @media (-webkit-min-device-pixel-ratio: 1.5) and (min-width: 1200px),
+         (min-resolution: 144dpi) and (min-width: 1200px) {
+    html { zoom: 1.2; }
+  }
+
+  @media (-webkit-min-device-pixel-ratio: 2) and (min-width: 1200px),
+         (min-resolution: 192dpi) and (min-width: 1200px) {
+    html { zoom: 1.25; }
+    .stat-card { border-width: 0.5px; }
+  }
+
+  @media (min-width: 2560px) {
+    html { zoom: 1.5; }
+  }
+
+  @media (min-width: 3840px) {
+    html { zoom: 2; }
+  }
+}
+
+/* =========================================================
+ * Capacitor / Mobile Safe Area
+ * ========================================================= */
+
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+header.sticky:not([data-no-safe-area]),
+div.sticky.safe-area-top,
+nav.sticky.safe-area-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+nav.fixed,
+div.fixed[class*="bottom-0"] {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@layer utilities {
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50;
+    box-shadow: var(--shadow-glass);
+  }
+
+  .gradient-primary { background: var(--gradient-primary); }
+  .gradient-success { background: var(--gradient-success); }
+  .gradient-warning { background: var(--gradient-warning); }
+  .gradient-info { background: var(--gradient-info); }
+  .gradient-danger { background: var(--gradient-danger); }
+  .gradient-brand { background: var(--gradient-brand); }
+
+  .brand-header {
+    background: hsl(var(--brand-dark));
+    color: white;
+  }
+
+  .brand-nav {
+    border-color: hsl(var(--brand-lime));
+  }
+
+  .stat-card {
+    @apply relative overflow-hidden rounded-xl p-4 lg:p-6 transition-all duration-300;
+    box-shadow: var(--shadow-md);
+  }
+
+  .stat-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+  }
+
+  .admin-table {
+    @apply w-full;
+  }
+
+  .admin-table th {
+    @apply px-3 lg:px-4 py-2.5 lg:py-3 text-left font-semibold text-muted-foreground uppercase tracking-wider text-[11px] lg:text-xs;
+  }
+
+  .admin-table td {
+    @apply px-3 lg:px-4 py-3 lg:py-3.5 border-t border-border/50 text-xs lg:text-sm;
+  }
+
+  .admin-table tr:hover td {
+    @apply bg-accent/50;
+  }
+
+  .page-header {
+    @apply mb-5 lg:mb-8;
+  }
+
+  .page-title {
+    @apply text-xl lg:text-xl xl:text-3xl font-bold tracking-tight;
+  }
+
+  .page-description {
+    @apply text-sm lg:text-base text-muted-foreground mt-1;
+  }
+
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .capacitor-safe-top {
+    padding-top: max(env(safe-area-inset-top, 0px), 24px);
+  }
+
+  .capacitor-safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .product-img-placeholder {
+    @apply bg-gradient-to-br from-secondary/60 to-secondary/20 flex items-center justify-center;
+  }
+}
+
+/* Progressive font-size scale for large desktops */
+@media (min-width: 1300px) {
+  html { font-size: 122%; }
+}
+@media (min-width: 1536px) {
+  html { font-size: 130%; }
+}
+@media (min-width: 1920px) {
+  html { font-size: 140%; }
+}
+
+/* Hide Google reCAPTCHA badge */
+.grecaptcha-badge {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.compact {
+  --scale: 0.85;
+}
+
+/* Text */
+.compact body {
+  font-size: 0.85rem;
+}
+
+/* Cards / containers */
+.compact .card,
+.compact .p-4 {
+  padding: calc(1rem * 0.75);
+}
+
+/* Gaps */
+.compact .gap-4 {
+  gap: 0.75rem;
+}
+
+/* Buttons */
+.compact button {
+  padding: 6px 10px;
+  font-size: 0.8rem;
+}
+
+/* Sidebar */
+.compact .sidebar {
+  width: 220px; /* slightly tighter */
+}
+
+/* Icons */
+.compact svg {
+  width: 16px;
+  height: 16px;
+}
