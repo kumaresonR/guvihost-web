@@ -41,6 +41,7 @@ import { NavLink } from "@/components/NavLink";
 interface NavSubItem {
   title: string;
   url: string;
+  roles?: UserRole[];
 }
 
 interface NavItem {
@@ -52,16 +53,21 @@ interface NavItem {
   subItems?: NavSubItem[];
 }
 
+const ADMIN_ONLY: UserRole[] = ["admin"];
+const ALL_STAFF: UserRole[] = ["admin", "support"];
+
 const staffMenuItems: NavItem[] = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutGrid },
-  { title: "Client Dashboard", url: "/client-dashboard", icon: LayoutGrid },
+  { title: "Dashboard", url: "/dashboard", icon: LayoutGrid, roles: ADMIN_ONLY },
+  { title: "Client Dashboard", url: "/client-dashboard", icon: LayoutGrid, roles: ADMIN_ONLY },
   {
     title: "Clients",
     url: "/clients",
     icon: User,
+    roles: ADMIN_ONLY,
     subItems: [
       { title: "All Clients", url: "/clients/all" },
       { title: "Add Client", url: "/clients/add" },
+      { title: "Login as Client", url: "/clients/login" },
       { title: "KYC", url: "/clients/kyc" },
       { title: "KYC Verification", url: "/clients/kyc-verification" },
       { title: "Client Notes", url: "/clients/notes" },
@@ -71,6 +77,7 @@ const staffMenuItems: NavItem[] = [
     title: "Services",
     url: "/services",
     icon: HardDrive,
+    roles: ADMIN_ONLY,
     subItems: [
       { title: "All Services", url: "/services/all" },
       { title: "Shared Hosting", url: "/services/shared" },
@@ -78,12 +85,13 @@ const staffMenuItems: NavItem[] = [
       { title: "Dedicated Servers", url: "/services/dedicated" },
     ],
   },
-  { title: "Domains", url: "/domains", icon: Globe },
-  { title: "Hosting", url: "/hosting", icon: HardDrive },
+  { title: "Domains", url: "/domains", icon: Globe, roles: ADMIN_ONLY },
+  { title: "Hosting", url: "/hosting", icon: HardDrive, roles: ADMIN_ONLY },
   {
     title: "Billing",
     url: "/billing",
     icon: Receipt,
+    roles: ADMIN_ONLY,
     subItems: [
       { title: "Invoices", url: "/billing/invoices" },
       { title: "Transactions", url: "/billing/transactions" },
@@ -95,21 +103,25 @@ const staffMenuItems: NavItem[] = [
     title: "Support Tickets",
     url: "/support",
     icon: Headset,
+    roles: ALL_STAFF,
     subItems: [
       { title: "All Tickets", url: "/support/all" },
       { title: "Open Tickets", url: "/support/open" },
       { title: "View Tickets", url: "/support/view" },
     ],
   },
-  { title: "Orders", url: "/orders", icon: ShoppingCart },
-  { title: "Servers", url: "/servers", icon: Database },
-  { title: "Automation", url: "/automation", icon: Rocket },
-  { title: "Reports", url: "/reports", icon: LineChart },
-  { title: "Staff Management", url: "/staff", icon: UserCog },
+  { title: "Quotes", url: "/admin/quotes", icon: FileText, roles: ADMIN_ONLY },
+  { title: "Knowledge Base", url: "/admin/kb", icon: BookOpen, roles: ADMIN_ONLY },
+  { title: "Orders", url: "/orders", icon: ShoppingCart, roles: ADMIN_ONLY },
+  { title: "Servers", url: "/servers", icon: Database, roles: ADMIN_ONLY },
+  { title: "Automation", url: "/automation", icon: Rocket, roles: ADMIN_ONLY },
+  { title: "Reports", url: "/reports", icon: LineChart, roles: ADMIN_ONLY },
+  { title: "Staff Management", url: "/staff", icon: UserCog, roles: ADMIN_ONLY },
   {
     title: "Account",
     url: "/account",
     icon: User,
+    roles: ADMIN_ONLY,
     subItems: [
       { title: "My Profile", url: "/account/profile" },
       { title: "Security", url: "/account/security" },
@@ -117,8 +129,8 @@ const staffMenuItems: NavItem[] = [
       { title: "Email Preferences", url: "/account/email-prefs" },
     ],
   },
-  { title: "Settings", url: "/settings", icon: Settings },
-  { title: "API Integrations", url: "/api", icon: Lock },
+  { title: "Settings", url: "/settings", icon: Settings, roles: ADMIN_ONLY },
+  { title: "API Integrations", url: "/api", icon: Lock, roles: ADMIN_ONLY },
 ];
 
 const clientMenuItems: NavItem[] = [
@@ -179,13 +191,39 @@ const ROLE_COLORS: Record<UserRole | "client", string> = {
   admin: "bg-blue-100 text-blue-700",
   finance: "bg-emerald-100 text-emerald-700",
   sales: "bg-purple-100 text-purple-700",
+  support: "bg-amber-100 text-amber-700",
   client: "bg-slate-100 text-slate-700",
 };
 
-function NavCollapsibleItem({ item, collapsed }: { item: NavItem, collapsed: boolean }) {
-  const [isOpen, setIsOpen] = useState(true); 
+const ROLE_LABELS: Record<UserRole | "client", string> = {
+  admin: "Admin",
+  finance: "Finance",
+  sales: "Sales",
+  support: "Support",
+  client: "Client",
+};
+
+function canAccessNavItem(roles: UserRole[] | undefined, userRole: UserRole): boolean {
+  if (!roles) return userRole === "admin";
+  if (userRole === "admin") return true;
+  return roles.includes(userRole);
+}
+
+function NavCollapsibleItem({
+  item,
+  collapsed,
+  userRole,
+}: {
+  item: NavItem;
+  collapsed: boolean;
+  userRole: UserRole;
+}) {
+  const [isOpen, setIsOpen] = useState(true);
   const location = useLocation();
   const isGroupActive = location.pathname.startsWith(item.url);
+  const visibleSubItems = item.subItems?.filter((sub) => canAccessNavItem(sub.roles, userRole)) ?? [];
+
+  if (visibleSubItems.length === 0) return null;
 
   return (
     <SidebarMenuItem>
@@ -216,9 +254,9 @@ function NavCollapsibleItem({ item, collapsed }: { item: NavItem, collapsed: boo
       </SidebarMenuButton>
 
       {/* FIXED TEXT SIZE FOR SUB ITEMS HERE */}
-      {isOpen && !collapsed && item.subItems && (
+      {isOpen && !collapsed && visibleSubItems.length > 0 && (
         <div className="flex flex-col mt-2 ml-5 pl-4 border-l border-slate-200 space-y-2.5">
-          {item.subItems.map(subItem => (
+          {visibleSubItems.map(subItem => (
             <NavLink
               key={subItem.url}
               to={subItem.url}
@@ -246,11 +284,7 @@ interface NavGroupProps {
 }
 
 function NavGroup({ label, items, collapsed, userRole }: NavGroupProps) {
-  const filteredItems = items.filter((item) => {
-    if (!item.roles) return true;
-    if (userRole === "admin") return true;
-    return item.roles.includes(userRole);
-  });
+  const filteredItems = items.filter((item) => canAccessNavItem(item.roles, userRole));
 
   if (filteredItems.length === 0) return null;
 
@@ -265,7 +299,7 @@ function NavGroup({ label, items, collapsed, userRole }: NavGroupProps) {
         <SidebarMenu className="space-y-1">
           {filteredItems.map((item) => (
             item.subItems ? (
-              <NavCollapsibleItem key={item.title} item={item} collapsed={collapsed} />
+              <NavCollapsibleItem key={item.title} item={item} collapsed={collapsed} userRole={userRole} />
             ) : (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild tooltip={collapsed ? item.title : undefined}>
@@ -309,7 +343,7 @@ export function AdminSidebar() {
   const role = user?.role || "admin";
   const menuItems = isClient ? clientMenuItems : staffMenuItems;
   const profileRole: UserRole | "client" = user?.role ?? (isClient ? "client" : "admin");
-  const profileLabel = profileRole === "client" ? "Client" : profileRole;
+  const profileLabel = ROLE_LABELS[profileRole];
 
   const handleLogout = async () => { 
     await logout(); 

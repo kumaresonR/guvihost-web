@@ -1,4 +1,4 @@
-export type UserRole = 'admin' | 'finance' | 'sales';
+export type UserRole = 'admin' | 'finance' | 'sales' | 'support';
 export type AppRole = 'admin' | 'finance' | 'sales' | 'vendor' | 'customer';
 export type PortalType = 'admin' | 'vendor' | 'customer';
 

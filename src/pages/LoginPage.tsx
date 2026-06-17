@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/lib/auth';
+import { getStaffHomePath } from '@/hooks/use-role';
 import { toast } from 'sonner';
 import { GuvihostApiError } from '@/lib/guvihost-api';
 import { isGoogleLoginAvailable, useGoogleSignInButton } from '@/lib/google-auth';
@@ -60,7 +61,13 @@ export default function LoginPage() {
   };
 
   const goToPortal = (portal: 'admin' | 'client') => {
-    navigate(portal === 'client' ? '/client-dashboard' : '/dashboard', { replace: true });
+    if (portal === 'client') {
+      navigate('/client-dashboard', { replace: true });
+      return;
+    }
+    const stored = localStorage.getItem('guvihost_admin_user');
+    const role = stored ? (JSON.parse(stored) as { role?: string }).role : undefined;
+    navigate(getStaffHomePath(role), { replace: true });
   };
 
   useGoogleSignInButton(

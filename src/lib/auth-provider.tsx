@@ -34,7 +34,7 @@ function mapStaffUser(u: GuvihostUser): AuthUser {
     u.role === "SUPER_ADMIN" || u.role === "ADMIN"
       ? "admin"
       : u.role === "SUPPORT_AGENT"
-        ? "sales"
+        ? "support"
         : "admin";
 
   return {

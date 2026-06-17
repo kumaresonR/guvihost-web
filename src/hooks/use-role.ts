@@ -12,6 +12,11 @@ export function useIsClient(): boolean {
   return Boolean(customerUser);
 }
 
+/** Staff landing path after login */
+export function getStaffHomePath(role?: string): string {
+  return role === "support" ? "/support/all" : "/dashboard";
+}
+
 export function useDisplayUser(): { name: string; email: string } | null {
   const { user, customerUser } = useAuth();
   if (user) return { name: user.name, email: user.email };

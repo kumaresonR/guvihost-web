@@ -5,7 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/lib/auth";
-import { useIsStaff, useIsClient } from "@/hooks/use-role";
+import { useIsStaff, useIsClient, getStaffHomePath } from "@/hooks/use-role";
 
 // --- CORE & AUTH PAGES ---
 import LoginPage from "./pages/LoginPage";
@@ -116,18 +116,38 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-const StaffRoute = ({ children }: { children: React.ReactNode }) => {
+const StaffRoute = ({
+  children,
+  adminOnly = true,
+}: {
+  children: React.ReactNode;
+  adminOnly?: boolean;
+}) => {
   const isStaff = useIsStaff();
+  const { user } = useAuth();
   if (!isStaff) {
     return <Navigate to="/client-dashboard" replace />;
+  }
+  if (adminOnly && user?.role === "support") {
+    return <Navigate to="/support/all" replace />;
+  }
+  return <>{children}</>;
+};
+
+const AdminDashboardRoute = ({ children }: { children: React.ReactNode }) => {
+  const isStaff = useIsStaff();
+  const { user } = useAuth();
+  if (isStaff && user?.role === "support") {
+    return <Navigate to="/support/all" replace />;
   }
   return <>{children}</>;
 };
 
 const ClientRoute = ({ children }: { children: React.ReactNode }) => {
   const isClient = useIsClient();
+  const { user } = useAuth();
   if (!isClient) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={getStaffHomePath(user?.role)} replace />;
   }
   return <>{children}</>;
 };
@@ -151,7 +171,7 @@ const AppRoutes = () => {
       {/* ========================================================= */}
       {/* GUVIHOST APP ROUTES                                       */}
       {/* ========================================================= */}
-      <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+      <Route path="/dashboard" element={<ProtectedRoute><AdminDashboardRoute><DashboardPage /></AdminDashboardRoute></ProtectedRoute>} />
       <Route path="/client-dashboard" element={<ProtectedRoute><DashboardClientPage /></ProtectedRoute>} />
       
       {/* Clients */}
